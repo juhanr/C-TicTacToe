@@ -37,9 +37,10 @@ int main() {
 }
 
 void startGame() {
+	char input;
 	printf("=== Tic-Tac-Toe ===\n\n"
 			"Do you want to start first? (Y/N): ");
-	char input = getChar();
+	input = getChar();
 	if (input == 'Y')
 		startTurn(HUMAN);
 	else if (input == 'N')
@@ -68,13 +69,14 @@ int charToInt(char c) {
 
 void startTurn(char player) {
 	if (player == HUMAN) {
+		int x;
 		printf("\n--- Your turn ---\n\n");
 		showBoard();
 		showLocations();
 		printf("\n");
 		while (1) {
 			printf("Please choose a location: ");
-			int x = getInt();
+			x = getInt();
 			if (x >= 0 && x < 9) {
 				if (board[x] != EMPTY)
 					printf("The location is already taken!\n");
@@ -106,9 +108,11 @@ void move(char player, int location) {
 }
 
 int getAIMoveLocation() {
-	int k, i, j, boardValues[8];
+	int k, i, j, boardValues[8], combinations[3];
+	combinations[0] = 2 * AI + EMPTY;
+	combinations[1] = 2 * HUMAN + EMPTY;
+	combinations[2] = AI + 2 * EMPTY;
 	setBoardValues(boardValues);
-	int combinations[3] = { 2 * AI + EMPTY, 2 * HUMAN + EMPTY, AI + 2 * EMPTY };
 	for (k = 0; k < 3; k++) {
 		for (i = 0; i < 8; i++) {
 			if (boardValues[i] == combinations[k]) {
@@ -168,8 +172,9 @@ int getAIMoveLocation() {
 		}
 	} else {
 		while (1) {
+			int randomIndex;
 			srand(time(NULL));
-			int randomIndex = rand() % strlen(board);
+			randomIndex = rand() % strlen(board);
 			if (board[randomIndex] == EMPTY)
 				return randomIndex;
 		}
@@ -182,9 +187,8 @@ int getIntArrayLength(int array[]) {
 }
 
 void checkIfWon(char player) {
-	int boardValues[8];
+	int boardValues[8], i;
 	setBoardValues(boardValues);
-	int i;
 	if (player == HUMAN) {
 		for (i = 0; i < 8; i++) {
 			if (boardValues[i] == 3 * HUMAN) {
@@ -212,14 +216,14 @@ void checkIfBoardFull() {
 }
 
 void setBoardValues(int result[]) {
-	result[0] = board[0] + board[1] + board[2]; // row 1
-	result[1] = board[3] + board[4] + board[5]; // row 2
-	result[2] = board[6] + board[7] + board[8]; // row 3
-	result[3] = board[0] + board[3] + board[6]; // column 1
-	result[4] = board[1] + board[4] + board[7]; // column 2
-	result[5] = board[2] + board[5] + board[8]; // column 3
-	result[6] = board[2] + board[4] + board[6]; // diagonal 1
-	result[7] = board[0] + board[4] + board[8]; // diagonal 2
+	result[0] = board[0] + board[1] + board[2]; /* row 1 */
+	result[1] = board[3] + board[4] + board[5]; /* row 2 */
+	result[2] = board[6] + board[7] + board[8]; /* row 3 */
+	result[3] = board[0] + board[3] + board[6]; /* column 1 */
+	result[4] = board[1] + board[4] + board[7]; /* column 2 */
+	result[5] = board[2] + board[5] + board[8]; /* column 3 */
+	result[6] = board[2] + board[4] + board[6]; /* diagonal 1 */
+	result[7] = board[0] + board[4] + board[8]; /* diagonal 2 */
 }
 
 void gameOver(char* message) {
@@ -228,8 +232,9 @@ void gameOver(char* message) {
 	printf("\n%s\n", message);
 	isGameOver = 1;
 	while (1) {
+		char input;
 		printf("Do you want to start a new game? (Y/N):");
-		char input = getChar();
+		input = getChar();
 		printf("\n");
 		if (input == 'Y')
 			startGame();
@@ -241,15 +246,15 @@ void gameOver(char* message) {
 }
 
 void showBoard() {
-	printf("- Board -\n");
 	int i;
+	printf("- Board -\n");
 	for (i = 0; i < 9; i = i + 3)
 		printf("  %c %c %c\n", board[i], board[i + 1], board[i + 2]);
 }
 
 void showLocations() {
-	printf("\n- Locations -\n");
 	int i;
+	printf("\n- Locations -\n");
 	for (i = 0; i < 9; i = i + 3)
 		printf("  %d %d %d\n", locations[i], locations[i + 1],
 				locations[i + 2]);
